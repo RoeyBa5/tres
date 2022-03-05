@@ -44,6 +44,8 @@ class MongoConnector:
             edgesCount, nodesCount = self.__getNodesAndEdgesCountWithRetries()
         except Exception as err:
             logging.error(f"An exception error while getting nodes and edges count: {err}")
+        else:
+            logging.info(f"Get nodes and edges count succeed")
         return nodesCount, edgesCount
 
     @retry(tries=MAX_MONGO_ATTEMPTS)
