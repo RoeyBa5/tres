@@ -1,6 +1,5 @@
 from dotenv import dotenv_values
 
-mongoPassword = "N6KtgDAK63wxuEn"
 MONGO_PASSWORD = 'mongoPassword'
 mongoPassword = dotenv_values()[MONGO_PASSWORD]
 mongoUrl = f"mongodb://TresRoey:{mongoPassword}@cluster0-shard-00-00.sb5kc.mongodb.net:27017," \

@@ -39,6 +39,19 @@ class MongoConnector:
         self.__flushChanges(collection=self.transactionCollection, bulk=bulk,
                             operationType="deleteTransactionCollection")
 
+    def getNodesAndEdgesCount(self):
+        try:
+            edgesCount, nodesCount = self.__getNodesAndEdgesCountWithRetries()
+        except Exception as err:
+            logging.error(f"An exception error while getting nodes and edges count: {err}")
+        return nodesCount, edgesCount
+
+    @retry(tries=MAX_MONGO_ATTEMPTS)
+    def __getNodesAndEdgesCountWithRetries(self):
+        nodesCount = self.userCollection.count_documents({})
+        edgesCount = self.transactionCollection.count_documents({})
+        return edgesCount, nodesCount
+
     def __flushChanges(self, collection, bulk, operationType):
         try:
             startTime = timer()

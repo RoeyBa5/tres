@@ -13,8 +13,9 @@ def run():
         print('Hello, choose which operation you want to make:')
         print('1. Run BFS on target user')
         print('2. Clean all collections')
-        print('3. Quit')
-        operation = input('Enter your choice (1/2/3): ')
+        print('3. Get nodes and edges count')
+        print('4. Quit')
+        operation = input('Enter your choice (1/2/3/4): ')
 
         if operation == '1':
             # BFS
@@ -27,6 +28,9 @@ def run():
         if operation == '2':
             connector.deleteAllCollections()
         if operation == '3':
+            nodesCount, edgesCount = connector.getNodesAndEdgesCount()
+            print(f'Nodes count = {nodesCount}, edges count = {edgesCount}')
+        if operation == '4':
             print('Bye!')
             break
 
