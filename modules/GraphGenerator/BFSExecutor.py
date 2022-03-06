@@ -4,13 +4,13 @@ import threading
 import time
 from modules.GraphGenerator.configuration import configuration
 from modules.FetchAndDecode.TransactionMapDecoder import getTransactionsMapByUser
-from modules.GraphGenerator.Consts import targetUser, BFS_EXECUTOR, TIME_BETWEEN_THREADS, THREADING
+from modules.GraphGenerator.Consts import TARGET_USER, BFS_EXECUTOR, TIME_BETWEEN_THREADS, THREADING
 
 config = configuration[BFS_EXECUTOR]
 
 
 def BfsExecutor(connector, maxChildrenPerNode, maxDepth):
-    usersToHandleQueue = getInitialUsersToHandleQueue(targetUser, maxDepth)
+    usersToHandleQueue = getInitialUsersToHandleQueue(TARGET_USER, maxDepth)
     handledUsers = []
     for i in range(maxDepth):
         handleNodesInLevel(connector, handledUsers, i, maxChildrenPerNode, usersToHandleQueue)
@@ -21,7 +21,7 @@ def handleNodesInLevel(connector, handledUsers, i, maxChildrenPerNode, usersToHa
     while usersToHandleQueue[i].qsize() > 0:
         try:
             threading.Thread(target=handleUserWorker,
-                                    args=(connector, handledUsers, i, maxChildrenPerNode, usersToHandleQueue)).start()
+                             args=(connector, handledUsers, i, maxChildrenPerNode, usersToHandleQueue)).start()
             time.sleep(config[THREADING][TIME_BETWEEN_THREADS])
         except Exception as err:
             logging.error(f"An exception occurred in threading: {err}")
