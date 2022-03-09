@@ -8,6 +8,12 @@ from modules.GraphGenerator.Consts import TARGET_USER, BFS_EXECUTOR, TIME_BETWEE
 
 config = configuration[BFS_EXECUTOR]
 
+"""
+This class writes the graph to mongo, using BFS
+Using Queue for each level of the BFS, each level runs asynchronously with multi threading
+We don't handle node twice
+"""
+
 
 def BfsExecutor(connector, maxChildrenPerNode, maxDepth):
     usersToHandleQueue = getInitialUsersToHandleQueue(TARGET_USER, maxDepth)

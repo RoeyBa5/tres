@@ -5,6 +5,7 @@ from timeit import default_timer as timer
 
 from modules.GraphGenerator.BFSExecutor import BfsExecutor
 from modules.GraphGenerator.MongoConnector import MongoConnector
+from modules.GraphGenerator.GraphVisualizer import graphVisualizer
 
 
 def run():
@@ -14,8 +15,9 @@ def run():
         print('1. Run BFS on target user')
         print('2. Clean all collections')
         print('3. Get nodes and edges count')
-        print('4. Quit')
-        operation = input('Enter your choice (1/2/3/4): ')
+        print('4. Plot a graph from mongo')
+        print('5. Quit')
+        operation = input('Enter your choice (1/2/3/4/5): ')
 
         if operation == '1':
             # BFS
@@ -31,6 +33,8 @@ def run():
             nodesCount, edgesCount = connector.getNodesAndEdgesCount()
             print(f'Nodes count = {nodesCount}, edges count = {edgesCount}')
         if operation == '4':
+            graphVisualizer(connector)
+        if operation == '5':
             print('Bye!')
             break
 

@@ -27,8 +27,7 @@ class MongoConnectorTester(unittest.TestCase):
         self.assertIn(['xyz', 'abc'], actualEdges)
         self.assertIn(['pkh', 'lkj', 'mnb'], actualEdges)
 
-    # TODO: Add more edge cases, like upserting existing documents and more
+        # TODO: Add more edge cases, like upserting existing documents and more
 
-
-if __name__ == '__main__':
-    unittest.main()
+        if __name__ == '__main__':
+            unittest.main()

@@ -13,6 +13,14 @@ from modules.FetchAndDecode.Consts import ETHERSCAN_API_KEY, TRANSACTION_DOWNLOA
 config = configuration[TRANSACTION_DOWNLOADER]
 maxLimitRetryStrategyConfig = config[MAX_LIMIT_RETRY_STRATEGY]
 
+"""
+This class downloads the data using the api
+We use here 2 retries mechanisms:
+1. Built-in mechanism of request library
+2. We throw exception for throttling, because the api return 200 for this situation. We wrapped it with another
+retry mechanism.
+"""
+
 
 def downloadTransactionsByUser(targetUser: str, startBlock: int, endBlock: int, page: int, offset: int) -> requests:
     etherscanApiKey = dotenv_values()[ETHERSCAN_API_KEY]

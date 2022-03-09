@@ -6,6 +6,10 @@ from modules.FetchAndDecode.TransactionsDownloader import downloadTransactionsBy
 
 config = configuration[TRANSACTION_MAP_DECODER]
 
+"""
+This class decodes the result from the api to a map
+"""
+
 
 def getTransactionsMapByUser(targetUser, maxChildren):
     downloadParams = config[DOWNLOAD_PARAMS]

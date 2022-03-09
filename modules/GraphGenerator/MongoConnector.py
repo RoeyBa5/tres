@@ -7,6 +7,11 @@ from retry import retry
 from modules.GraphGenerator.Consts import mongoUrl, TRANSACTION_DB, USER_COLLECTION, TRANSACTION_COLLECTION, \
     MAX_MONGO_ATTEMPTS
 
+"""
+mongoConnector Object
+Includes retries mechanism and bulk writes for efficiency
+"""
+
 
 class MongoConnector:
     def __init__(self):
@@ -18,8 +23,22 @@ class MongoConnector:
     def upsertUserNodes(self, userNodes):
         bulk = []
         for userNode in userNodes:
+            self.__checkIfNodeAlreadyExists(userNodes, userNode)
             bulk.append(UpdateOne({'userId': userNode}, {'$set': {'userId': userNode}}, upsert=True))
         self.__flushChanges(collection=self.userCollection, bulk=bulk, operationType="upsertUserNodes")
+
+    """
+    This function is according to Eilon's last reqeust 
+    """
+    def __checkIfNodeAlreadyExists(self, userNodes, userNode):
+        if userNode == userNodes[0]:
+            return
+        try:
+            if self.userCollection.find_one({'userId': userNode}) is not None:
+                logging.info(f"About to add an edge that already exists in the graph. The father of the edge is:"
+                             f" {userNodes[0]}, the edge is: {userNode}")
+        except Exception as err:
+            logging.error(f"An error occured while quering DB:{err}")
 
     def upsertTransactionEdges(self, transactions):
         bulk = []
@@ -53,6 +72,19 @@ class MongoConnector:
         nodesCount = self.userCollection.count_documents({})
         edgesCount = self.transactionCollection.count_documents({})
         return edgesCount, nodesCount
+
+    def getAllEdges(self):
+        try:
+            edges = self.__getAllEdgesWithRetries()
+        except Exception as err:
+            logging.error(f"An exception error while getting all edges: {err}")
+        else:
+            logging.info(f"Get all edges succeed")
+        return edges
+
+    @retry(tries=MAX_MONGO_ATTEMPTS)
+    def __getAllEdgesWithRetries(self):
+        return self.transactionCollection.find()
 
     def __flushChanges(self, collection, bulk, operationType):
         try:
